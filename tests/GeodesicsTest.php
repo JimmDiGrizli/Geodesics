@@ -1,7 +1,8 @@
 <?php
 use GetSky\Geodesics\Geodesics;
 
-class GeodesicsTest extends PHPUnit_Framework_TestCase {
+class GeodesicsTest extends PHPUnit_Framework_TestCase
+{
 
     /**
      * @var Geodesics

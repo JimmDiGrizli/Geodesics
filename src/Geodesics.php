@@ -1,17 +1,20 @@
 <?php
 namespace GetSky\Geodesics;
 
-class Geodesics {
+class Geodesics
+{
 
     private $first;
     private $second;
 
-    public function distance(array $first, array $second) {
+    public function distance(array $first, array $second)
+    {
         $distance = '100';
         return $distance;
     }
 
-    public function setFirstPoint($longitude, $latitude) {
+    public function setFirstPoint($longitude, $latitude)
+    {
         if ($longitude > 180 || $longitude < -180) {
             throw new \Exception("Incorrect value of longitude");
         }
@@ -21,11 +24,13 @@ class Geodesics {
         $this->first = [$longitude, $latitude];
     }
 
-    public function getFirstPoint() {
+    public function getFirstPoint()
+    {
         return [$this->first[0], $this->first[1]];
     }
 
-    public function setSecondPoint($longitude, $latitude) {
+    public function setSecondPoint($longitude, $latitude)
+    {
         if ($longitude > 180 || $longitude < -180) {
             throw new \Exception("Incorrect value of longitude");
         }
@@ -35,7 +40,8 @@ class Geodesics {
         $this->second = [$longitude, $latitude];
     }
 
-    public function getSecondPoint() {
+    public function getSecondPoint()
+    {
         return [$this->second[0], $this->second[1]];
     }
 }
