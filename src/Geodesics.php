@@ -4,6 +4,11 @@ namespace GetSky\Geodesics;
 class Geodesics
 {
 
+    const MAX_LONG = 180;
+    const MIN_LONG = -180;
+    const MIN_LAT = -90;
+    const MAX_LAT = 90;
+
     private $first;
     private $second;
 
@@ -15,33 +20,33 @@ class Geodesics
 
     public function setFirstPoint($longitude, $latitude)
     {
-        if ($longitude > 180 || $longitude < -180) {
-            throw new \Exception("Incorrect value of longitude");
-        }
-        if ($latitude > 90 || $latitude < -90) {
-            throw new \Exception("Incorrect value of longitude");
-        }
+        $this->validation($longitude, $latitude);
         $this->first = [$longitude, $latitude];
     }
 
     public function getFirstPoint()
     {
-        return [$this->first[0], $this->first[1]];
+        return $this->first;
     }
 
     public function setSecondPoint($longitude, $latitude)
     {
-        if ($longitude > 180 || $longitude < -180) {
-            throw new \Exception("Incorrect value of longitude");
-        }
-        if ($latitude > 90 || $latitude < -90) {
-            throw new \Exception("Incorrect value of longitude");
-        }
+        $this->validation($longitude, $latitude);
         $this->second = [$longitude, $latitude];
     }
 
     public function getSecondPoint()
     {
-        return [$this->second[0], $this->second[1]];
+        return $this->second;
+    }
+
+    protected function validation($longitude, $latitude)
+    {
+        if ($longitude > self::MAX_LONG || $longitude < self::MIN_LONG) {
+            throw new \Exception("Incorrect value of longitude");
+        }
+        if ($latitude > self::MAX_LAT || $latitude < self::MIN_LAT) {
+            throw new \Exception("Incorrect value of latitude");
+        }
     }
 }
