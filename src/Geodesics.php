@@ -1,8 +1,6 @@
 <?php
 namespace GetSky\Geodesics;
 
-use SebastianBergmann\Exporter\Exception;
-
 class Geodesics
 {
 
@@ -98,7 +96,7 @@ class Geodesics
 
 
         if ($i >= 200) {
-            throw new Exception('Formula failed to converge');
+            throw new \Exception('Formula failed to converge');
         }
 
         $uSq =
@@ -113,13 +111,13 @@ class Geodesics
         $this->distance = self::WGS84_B * $A * ($sigma - $deltaSigma);
 
         $this->bearing = atan2(
-            $cosU2 * $sinLon,
-            $cosU1 * $sinU2 - $sinU1 * $cosU2 * $cosLon
-        ) / (M_PI / 180);
+                $cosU2 * $sinLon,
+                $cosU1 * $sinU2 - $sinU1 * $cosU2 * $cosLon
+            ) / (M_PI / 180);
         $this->finishBearing = atan2(
-            $cosU1 * $sinLon,
-            -$sinU1 * $cosU2 + $cosU1 * $sinU2 * $cosLon
-        ) / (M_PI / 180);
+                $cosU1 * $sinLon,
+                -$sinU1 * $cosU2 + $cosU1 * $sinU2 * $cosLon
+            ) / (M_PI / 180);
     }
 
     protected function check()

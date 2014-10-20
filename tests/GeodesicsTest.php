@@ -37,6 +37,39 @@ class GeodesicsTest extends PHPUnit_Framework_TestCase
         $this->assertSame($revers, $fin->getValue($mock));
     }
 
+    public function testCheck()
+    {
+        /** @var Geodesics $mock */
+        $mock = $this->getMock('GetSky\Geodesics\Geodesics', ['calc']);
+        $mock->expects($this->once())->method('calc');
+
+        $method = new ReflectionMethod('GetSky\Geodesics\Geodesics', 'check');
+        $method->setAccessible(true);
+        $method->invoke($mock);
+
+        $dis = new ReflectionProperty('GetSky\Geodesics\Geodesics', 'distance');
+        $dis->setAccessible(true);
+        $dis->setValue($mock, 0);
+
+        $method->invoke($mock);
+    }
+
+    /**
+     * @dataProvider providerCalcParameters
+     */
+    public function testGetCalcParameters($param, $value)
+    {
+        $mock = $this->getMock('GetSky\Geodesics\Geodesics', ['check']);
+        $mock->expects($this->exactly(2))->method('check');
+        $dis = new ReflectionProperty('GetSky\Geodesics\Geodesics', $param);
+        $dis->setAccessible(true);
+
+        $dis->setValue($mock, $value);
+        $this->assertSame($value, $mock->$param());
+        $dis->setValue($mock, $value);
+        $this->assertSame($value, $mock->$param());
+    }
+
     /**
      * @dataProvider providerPoint
      */
@@ -89,6 +122,18 @@ class GeodesicsTest extends PHPUnit_Framework_TestCase
             [-24, 90],
             [180, 45],
             [-180, 34]
+        ];
+    }
+
+    public function providerCalcParameters()
+    {
+        return [
+            ['distance', 30],
+            ['distance', 345],
+            ['bearing', 685],
+            ['bearing', 5875],
+            ['finishBearing', 3465],
+            ['finishBearing', 56]
         ];
     }
 
