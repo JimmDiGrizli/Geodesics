@@ -9,10 +9,14 @@ class GeodesicsTest extends PHPUnit_Framework_TestCase
      */
     private $geodesic;
 
-    public function testDistance()
+    /**
+     * @dataProvider providerDistancePoint
+     */
+    public function testDistance($first, $second, $distance)
     {
-        $distance = $this->geodesic->distance([20, 39], [40, 76]);
-        $this->assertSame('100', $distance);
+        $this->geodesic->setFirstPoint($first[0], $first[1]);
+        $this->geodesic->setSecondPoint($second[0], $second[1]);
+        $this->assertSame($distance, $this->geodesic->distance());
     }
 
     /**
@@ -63,10 +67,22 @@ class GeodesicsTest extends PHPUnit_Framework_TestCase
         return [
             [20, 30],
             [-45, -50],
-            [68, -24],
-            [-24, 24],
+            [68, -90],
+            [-24, 90],
             [180, 45],
             [-180, 34]
+        ];
+    }
+
+    public function providerDistancePoint()
+    {
+        return [
+            [[20, 30], [34, -34], 7235204.7533387318],
+            [[-45, -50], [-45, -50], 0],
+            [[68, -90], [180, 67], 17436319.575342514],
+            [[-24, 90], [-34, 0], 10001965.729315577],
+            [[180, 45], [180, -90], 14986910.107297322],
+            [[-180, 34], [45, 76], 7397040.4275098313]
         ];
     }
 
