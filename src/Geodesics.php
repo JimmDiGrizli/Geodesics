@@ -17,7 +17,29 @@ class Geodesics
     private $first;
     private $second;
 
+    private $bearing;
+    private $finishBearing;
+    private $distance;
+
     public function distance()
+    {
+        $this->check();
+        return $this->distance;
+    }
+
+    public function bearing()
+    {
+        $this->check();
+        return $this->bearing;
+    }
+
+    public function finishBearing()
+    {
+        $this->check();
+        return $this->finishBearing;
+    }
+
+    protected function calc()
     {
         $lon1 = (M_PI / 180) * $this->first[0];
         $lat1 = (M_PI / 180) * $this->first[1];
@@ -50,7 +72,10 @@ class Geodesics
             $sinSigma = sqrt($sinSqSigma);
 
             if ($sinSigma == 0) {
-                return 0;
+                $this->distance = 0;
+                $this->bearing = null;
+                $this->finishBearing = null;
+                return;
             }
 
             $cosSigma = $sinU1 * $sinU2 + $cosU1 * $cosU2 * $cosLon;
@@ -85,7 +110,23 @@ class Geodesics
         $cof2 = $B / 6 * $cos2SigmaM * (-3 + 4 * $sinSigma * $sinSigma) * (-3 + 4 * $cos2SigmaMQ);
         $deltaSigma = $B * $sinSigma * ($cos2SigmaM + $B / 4 * ($cosSigma * (-1 + 2 * $cos2SigmaMQ) - $cof2));
 
-        return self::WGS84_B * $A * ($sigma - $deltaSigma);
+        $this->distance = self::WGS84_B * $A * ($sigma - $deltaSigma);
+
+        $this->bearing = atan2(
+            $cosU2 * $sinLon,
+            $cosU1 * $sinU2 - $sinU1 * $cosU2 * $cosLon
+        ) / (M_PI / 180);
+        $this->finishBearing = atan2(
+            $cosU1 * $sinLon,
+            -$sinU1 * $cosU2 + $cosU1 * $sinU2 * $cosLon
+        ) / (M_PI / 180);
+    }
+
+    protected function check()
+    {
+        if ($this->distance === null) {
+            $this->calc();
+        }
     }
 
     public function setFirstPoint($longitude, $latitude)
