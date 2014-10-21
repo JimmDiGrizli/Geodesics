@@ -3,7 +3,6 @@ namespace GetSky\Geodesics;
 
 class Geodesics
 {
-
     const WGS84_A = 6378137;
     const WGS84_B = 6356752.31425;
 
