@@ -101,7 +101,8 @@ class Geodesics
 
         $uSq =
             $cosSqAlfa *
-            (self::WGS84_A * self::WGS84_A - self::WGS84_B * self::WGS84_B) / (self::WGS84_B * self::WGS84_B);
+            (self::WGS84_A * self::WGS84_A - self::WGS84_B * self::WGS84_B) /
+            (self::WGS84_B * self::WGS84_B);
 
         $A = 1 + $uSq / 16384 * (4096 + $uSq * (-768 + $uSq * (320 - 175 * $uSq)));
         $B = $uSq / 1024 * (256 + $uSq * (-128 + $uSq * (74 - 47 * $uSq)));
@@ -110,14 +111,8 @@ class Geodesics
 
         $this->distance = self::WGS84_B * $A * ($sigma - $deltaSigma);
 
-        $this->bearing = atan2(
-                $cosU2 * $sinLon,
-                $cosU1 * $sinU2 - $sinU1 * $cosU2 * $cosLon
-            ) / (M_PI / 180);
-        $this->finishBearing = atan2(
-                $cosU1 * $sinLon,
-                -$sinU1 * $cosU2 + $cosU1 * $sinU2 * $cosLon
-            ) / (M_PI / 180);
+        $this->bearing = atan2($cosU2 * $sinLon, $cosU1 * $sinU2 - $sinU1 * $cosU2 * $cosLon) / (M_PI / 180);
+        $this->finishBearing = atan2($cosU1 * $sinLon, -$sinU1 * $cosU2 + $cosU1 * $sinU2 * $cosLon) / (M_PI / 180);
     }
 
     protected function check()

@@ -15,7 +15,10 @@ class GeodesicsTest extends PHPUnit_Framework_TestCase
     public function testCalc($first, $second, $distance, $bearing, $revers)
     {
         /** @var Geodesics $mock */
-        $mock = $this->getMock('GetSky\Geodesics\Geodesics', ['check', 'validation']);
+        $mock = $this->getMock(
+            'GetSky\Geodesics\Geodesics',
+            ['check', 'validation']
+        );
         $method = new ReflectionMethod('GetSky\Geodesics\Geodesics', 'calc');
         $method->setAccessible(true);
         $p1 = new ReflectionProperty('GetSky\Geodesics\Geodesics', 'first');
@@ -26,7 +29,10 @@ class GeodesicsTest extends PHPUnit_Framework_TestCase
         $dis->setAccessible(true);
         $bea = new ReflectionProperty('GetSky\Geodesics\Geodesics', 'bearing');
         $bea->setAccessible(true);
-        $fin = new ReflectionProperty('GetSky\Geodesics\Geodesics', 'finishBearing');
+        $fin = new ReflectionProperty(
+            'GetSky\Geodesics\Geodesics',
+            'finishBearing'
+        );
         $fin->setAccessible(true);
 
         $p1->setValue($mock, $first);
@@ -140,12 +146,30 @@ class GeodesicsTest extends PHPUnit_Framework_TestCase
     public function providerDistancePoint()
     {
         return [
-            [[20, 30], [34, -34], 7235204.7533387318, 167.18321241654618, 166.60384000025635 ],
-            [[-45, -50], [-45, -50], 0, null, null ],
-            [[68, -90], [180, 67], 17436319.575342514, 111.99999999999999, 8.3294178740204185E-15],
+            [
+                [20, 30],
+                [34, -34],
+                7235204.7533387318,
+                167.18321241654618,
+                166.60384000025635
+            ],
+            [[-45, -50], [-45, -50], 0, null, null],
+            [
+                [68, -90],
+                [180, 67],
+                17436319.575342514,
+                111.99999999999999,
+                8.3294178740204185E-15
+            ],
             [[-24, 90], [-34, 0], 10001965.729315577, -170.0, -180.0],
             [[180, 45], [180, -90], 14986910.107297322, 180.0, 180.0],
-            [[-180, 34], [45, 76], 7397040.4275098313, -10.778404119271842, -140.24458834308729]
+            [
+                [-180, 34],
+                [45, 76],
+                7397040.4275098313,
+                -10.778404119271842,
+                -140.24458834308729
+            ]
         ];
     }
 
