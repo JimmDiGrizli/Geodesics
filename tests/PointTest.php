@@ -5,6 +5,9 @@ class PointTest extends PHPUnit_Framework_TestCase
 {
     const CLASS_NAME = 'GetSky\Geodesics\Point';
 
+    /**
+     * @dataProvider providerPoint
+     */
     public function testCreatePoint()
     {
         $class = new Point(40, 30);
@@ -18,6 +21,7 @@ class PointTest extends PHPUnit_Framework_TestCase
 
     public function testGetLatitude()
     {
+        /** @var $mock GetSky\Geodesics\Point*/
         $mock = $this->getClassMock();
 
         $lat = $this->getPrivateProperty(self::CLASS_NAME, 'latitude');
@@ -29,6 +33,7 @@ class PointTest extends PHPUnit_Framework_TestCase
 
     public function testGetLongitude()
     {
+        /** @var $mock GetSky\Geodesics\Point*/
         $mock = $this->getClassMock();
 
         $lat = $this->getPrivateProperty(self::CLASS_NAME, 'longitude');
@@ -38,12 +43,38 @@ class PointTest extends PHPUnit_Framework_TestCase
         $this->assertSame(78, $mock->getLongitude());
     }
 
+    /**
+     * @expectedException Exception
+     * @dataProvider providerPointException
+     */
+    public function testValidationException($x, $y)
+    {
+        new Point($x, $y);
+    }
 
     public function providerPoint()
     {
         return [
-            [24, 43],
-            [15, 23]
+            [20, 30],
+            [-45, -50],
+            [68, -90],
+            [-24, 90],
+            [180, 45],
+            [-180, 34]
+        ];
+    }
+
+    public function providerPointException()
+    {
+        return [
+            [200, 20],
+            [181, -50],
+            [-181, -24],
+            [-200, 24],
+            [23, 100],
+            [-45, 91],
+            [134, -91],
+            [-27, -100]
         ];
     }
 

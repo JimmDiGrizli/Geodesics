@@ -6,12 +6,13 @@ class Geodesics
     const WGS84_A = 6378137;
     const WGS84_B = 6356752.31425;
 
-    const MAX_LONG = 180;
-    const MIN_LONG = -180;
-    const MIN_LAT = -90;
-    const MAX_LAT = 90;
-
+    /**
+     * @var Point
+     */
     private $first;
+    /**
+     * @var Point
+     */
     private $second;
 
     private $bearing;
@@ -38,10 +39,10 @@ class Geodesics
 
     protected function calc()
     {
-        $lon1 = (M_PI / 180) * $this->first[0];
-        $lat1 = (M_PI / 180) * $this->first[1];
-        $lon2 = (M_PI / 180) * $this->second[0];
-        $lat2 = (M_PI / 180) * $this->second[1];
+        $lon1 = (M_PI / 180) * $this->first->getLongitude();
+        $lat1 = (M_PI / 180) * $this->first->getLatitude();
+        $lon2 = (M_PI / 180) * $this->second->getLongitude();
+        $lat2 = (M_PI / 180) * $this->second->getLatitude();
 
         $WGS84_F = 1 / 298.257223563;
 
@@ -121,10 +122,9 @@ class Geodesics
         }
     }
 
-    public function setFirstPoint($longitude, $latitude)
+    public function setFirstPoint(Point $point)
     {
-        $this->validation($longitude, $latitude);
-        $this->first = [$longitude, $latitude];
+        $this->first = $point;
     }
 
     public function getFirstPoint()
@@ -132,24 +132,13 @@ class Geodesics
         return $this->first;
     }
 
-    public function setSecondPoint($longitude, $latitude)
+    public function setSecondPoint(Point $point)
     {
-        $this->validation($longitude, $latitude);
-        $this->second = [$longitude, $latitude];
+        $this->second = $point;
     }
 
     public function getSecondPoint()
     {
         return $this->second;
-    }
-
-    protected function validation($longitude, $latitude)
-    {
-        if ($longitude > self::MAX_LONG || $longitude < self::MIN_LONG) {
-            throw new \Exception("Incorrect value of longitude");
-        }
-        if ($latitude > self::MAX_LAT || $latitude < self::MIN_LAT) {
-            throw new \Exception("Incorrect value of latitude");
-        }
     }
 }

@@ -15,10 +15,7 @@ class GeodesicsTest extends PHPUnit_Framework_TestCase
     public function testCalc($first, $second, $distance, $bearing, $revers)
     {
         /** @var Geodesics $mock */
-        $mock = $this->getMock(
-            'GetSky\Geodesics\Geodesics',
-            ['check', 'validation']
-        );
+        $mock = $this->getMock('GetSky\Geodesics\Geodesics', ['check']);
         $method = new ReflectionMethod('GetSky\Geodesics\Geodesics', 'calc');
         $method->setAccessible(true);
         $p1 = new ReflectionProperty('GetSky\Geodesics\Geodesics', 'first');
@@ -35,8 +32,32 @@ class GeodesicsTest extends PHPUnit_Framework_TestCase
         );
         $fin->setAccessible(true);
 
-        $p1->setValue($mock, $first);
-        $p2->setValue($mock, $second);
+        $mockFirst = $this->getMockBuilder('GetSky\Geodesics\Point')
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $lon = new ReflectionProperty('GetSky\Geodesics\Point', 'longitude');
+        $lon->setAccessible(true);
+        $lon->setValue($mockFirst, $first[0]);
+        $lat = new ReflectionProperty('GetSky\Geodesics\Point', 'latitude');
+        $lat->setAccessible(true);
+        $lat->setValue($mockFirst, $first[1]);
+        $p1->setValue($mock, $mockFirst);
+
+        $mockSecond = $this->getMockBuilder('GetSky\Geodesics\Point')
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $lon = new ReflectionProperty('GetSky\Geodesics\Point', 'longitude');
+        $lon->setAccessible(true);
+        $lon->setValue($mockSecond, $second[0]);
+        $lat = new ReflectionProperty('GetSky\Geodesics\Point', 'latitude');
+        $lat->setAccessible(true);
+        $lat->setValue($mockSecond, $second[1]);
+        $p2->setValue($mock, $mockSecond);
+
         $method->invoke($mock);
         $this->assertSame($distance, $dis->getValue($mock));
         $this->assertSame($bearing, $bea->getValue($mock));
@@ -76,47 +97,18 @@ class GeodesicsTest extends PHPUnit_Framework_TestCase
         $this->assertSame($value, $mock->$param());
     }
 
-    /**
-     * @dataProvider providerPoint
-     */
-    public function testSetFirstPoint($x, $y)
+    public function testSetFirstPoint()
     {
-        /** @var Geodesics $mock */
-        $mock = $this->getMock('GetSky\Geodesics\Geodesics', ['validation']);
-        $mock->setFirstPoint($x, $y);
-        $this->assertSame([$x, $y], $mock->getFirstPoint());
+        $mock = $this->getMock('GetSky\Geodesics\Point',null,[],'',false);
+        $this->geodesic->setFirstPoint($mock);
+        $this->assertSame($mock, $this->geodesic->getFirstPoint());
     }
 
-    /**
-     * @dataProvider providerPoint
-     */
-    public function testSetSecondPoint($x, $y)
+    public function testSetSecondPoint()
     {
-        /** @var Geodesics $mock */
-        $mock = $this->getMock('GetSky\Geodesics\Geodesics', ['validation']);
-        $mock->setSecondPoint($x, $y);
-        $this->assertSame([$x, $y], $mock->getSecondPoint());
-    }
-
-    /**
-     * @expectedException Exception
-     * @dataProvider providerPointException
-     */
-    public function testValidationException($x, $y)
-    {
-        $method = new ReflectionMethod('GetSky\Geodesics\Geodesics', 'validation');
-        $method->setAccessible(true);
-        $method->invoke($this->geodesic, $x, $y);
-    }
-
-    /**
-     * @dataProvider providerPoint
-     */
-    public function testValidation($x, $y)
-    {
-        $method = new ReflectionMethod('GetSky\Geodesics\Geodesics', 'validation');
-        $method->setAccessible(true);
-        $method->invoke($this->geodesic, $x, $y);
+        $mock = $this->getMock('GetSky\Geodesics\Point',null,[],'',false);
+        $this->geodesic->setSecondPoint($mock);
+        $this->assertSame($mock, $this->geodesic->getSecondPoint());
     }
 
     public function providerPoint()
