@@ -6,7 +6,7 @@ Solution for the distance between points on an ellipsoidal earth model is accura
 ```php
 $geodesic = new  GetSky\Geodesics\Geodesics();
 $geodesic->setFirstPoint(new Point(34.478785, 56.35755));
-$geodesic->setFirstPoint(new Point(78.3458685, -46.15445));
+$geodesic->setSecondPoint(new Point(78.3458685, -46.15445));
 
 $distance = $geodesic->distance();
 $bearing = $geodesic->bearing();
